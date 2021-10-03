@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: "spring-cloud-stream-multibinder"
+  cloud:
+    stream:
+      function:
+        definition: textProducer;textLengthProcessor;lengthConsumer
+      bindings:
+        textProducer-out-0:
+          destination: "${kafka.topic.texts}"
+          binder: kafka1
+        textLengthProcessor-in-0:
+          destination: "${kafka.topic.texts}"
+          binder: kstream1
+        textLengthProcessor-out-0:
+          destination: "${kafka.topic.lengths}"
+          binder: kstream1
+        lengthConsumer-in-0:
+          destination: "${kafka.topic.lengths}"
+          group: "${spring.application.name}"
+          binder: kafka1
+      binders:
+        kafka1:
+          type: kafka
+          environment:
+            spring.cloud.stream.kafka.binder:
+              brokers: "${kafka.brokers}"
+        kstream1:
+          type: kstream
+          environment:
+            spring.cloud.stream.kafka.streams.binder:
+              applicationId: "${spring.application.name}-KApp"
+              brokers: "${kafka.brokers}"
+
+server:
+  port: 8080
+
+kafka:
+  topic:
+    texts: "pub.texts"
+    lengths: "pub.lengths"
+  brokers: "localhost:9094"
