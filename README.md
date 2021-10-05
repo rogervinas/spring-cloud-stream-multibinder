@@ -116,7 +116,9 @@ kafka:
   * An instance named **lengthConsumer** that should implement **Consumer<LengthEvent>** interface
 
 💡 We use different values for the Kafka Streams **applicationId** and the Kafka Consumers **group** to avoid undesired behaviors.
+
 💡 We are using Spring Cloud Stream's default serialization/deserialization of Kotlin data classes to Json. In order for this to work we need to add **com.fasterxml.jackson.module:jackson-module-kotlin** dependency.
+
 💡 You can find all the available configuration properties documented in:
 * [Kafka binder properties](https://github.com/spring-cloud/spring-cloud-stream-binder-kafka#kafka-binder-properties)
 * [Kafka Streams binder properties](https://cloud.spring.io/spring-cloud-stream-binder-kafka/spring-cloud-stream-binder-kafka.html#_kafka_streams_properties)
