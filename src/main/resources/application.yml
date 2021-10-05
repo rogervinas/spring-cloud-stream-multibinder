@@ -36,7 +36,7 @@ server:
   port: 8080
 
 kafka:
+  brokers: "localhost:9094"
   topic:
     texts: "pub.texts"
     lengths: "pub.lengths"
-  brokers: "localhost:9094"

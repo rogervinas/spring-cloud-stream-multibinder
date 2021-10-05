@@ -11,35 +11,37 @@ It offers an abstraction (the **binding**) that works the same whatever undernea
 * **Amazon Kinesis**
 * ...
 
-But what if we want to use more than one binder in the same application? 🤔
+But what if we need more than one binder in the same application? 🤔
 
 Not a problem! You can specify multiple binder configurations as documented in [Connecting to Multiple Systems](https://cloud.spring.io/spring-cloud-stream/spring-cloud-stream.html#multiple-systems)
 
 Let's put the theory into practice 🛠️ ...
 
-### Goal
+## Goal
 
 We want to implement this flow:
 
 ![Diagram1](doc/diagram1.png)
 
-1. User will POST text/plain payloads to /text endpoint
-2. A **KafkaProducer** will send these payloads to topic **pub.texts** as a TextEvent with format `{ "text" : string }`
-3. A **KafkaStreams** transformation will consume TextEvents from topic **pub.texts** and produce LengthEvents to topic **pub.lengths** with format `{ "length" : number }`
-4. A **KafkaConsumer** will receive LengthEvents and will log them to the console
+* User will POST string payloads to **/text** endpoint
+* A **KafkaProducer** will send these payloads to topic **pub.texts** as `{ "text" : string }`
+* A **KafkaStreams** transformation will consume from topic **pub.texts** and produce events to topic **pub.lengths** as `{ "length" : number }`
+* A **KafkaConsumer** will consume events from topic **pub.lengths** and log them to the console
 
-So we are using two Spring Cloud Stream binders:
+So we will use two Spring Cloud Stream binders:
 * **Kafka**
 * **Kafka Streams**
 
-We create a project using this [spring initializr configuration](https://start.spring.io/#!type=gradle-project&language=kotlin&platformVersion=2.5.4&packaging=jar&jvmVersion=11&groupId=com.rogervinas&artifactId=springcloudstreammultibinder&name=springcloudstreammultibinder&description=Spring%20Cloud%20Streams%20%26%20Kafka%20Streams%20Binder&packageName=com.rogervinas.springcloudstreammultibinder&dependencies=cloud-stream) and we add:
-* **Kafka** binder dependency **spring-cloud-stream-binder-kafka**
-* **Kafka Streams** binder dependency **spring-cloud-stream-binder-kafka-streams**
+## Create the project
 
-### Integration Test
+We use this [spring initializr configuration](https://start.spring.io/#!type=gradle-project&language=kotlin&platformVersion=2.5.4&packaging=jar&jvmVersion=11&groupId=com.rogervinas&artifactId=springcloudstreammultibinder&name=springcloudstreammultibinder&description=Spring%20Cloud%20Streams%20%26%20Kafka%20Streams%20Binder&packageName=com.rogervinas.springcloudstreammultibinder&dependencies=cloud-stream) and we add:
+* **Kafka** binder lib **spring-cloud-stream-binder-kafka**
+* **Kafka Streams** binder lib **spring-cloud-stream-binder-kafka-streams**
 
-We start writing the following **integration test** using:
-* [testcontainers](https://www.testcontainers.org/) and [docker-compose](docker-compose.yml) with a **Kafka** container
+## Integration Test
+
+We start writing the following **integration test**, using:
+* [Testcontainers](https://www.testcontainers.org/) and [docker-compose](docker-compose.yml) with a **Kafka** container
 * JUnit Jupiter [OutputCaptureExtension](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/system/OutputCaptureExtension.html)
 
 ```kotlin
@@ -59,9 +61,9 @@ fun `should process text lengths`(capturedOutput: CapturedOutput) {
 
 This test will obviously fail, but it should work once we have finished our implementation.
 
-### Spring Cloud Stream binders configuration
+## Spring Cloud Stream binders configuration
 
-Next we configure the two binders we are using:
+Next we configure the two binders:
 
 ```yaml
 spring:
@@ -105,24 +107,23 @@ kafka:
   brokers: "localhost:9094"
 ```
 
-With this configuration:
-* **Spring Cloud Stream** will create:
+* Spring Cloud Stream will create:
   * A **Kafka Streams binder** connected to **localhost:9094**
   * A **Kafka binder** connected to **localhost:9094**
-* Following the Spring Cloud Stream functional programming model conventions we need to create:
-  * A **@Bean** named **textProducer** that should implement **Supplier<Flux<TextEvent>>** interface
-  * A **@Bean** named **textLengthProcessor** that should implement **Function<KStream<String, TextEvent>, KStream<String, LengthEvent>>** interface
-  * A **@Bean** named **lengthConsumer** that should implement **Consumer<LengthEvent>** interface
+* Following the Spring Cloud Stream *functional programming model conventions* we should create:
+  * An instance named **textProducer** that should implement **Supplier<Flux<TextEvent>>** interface
+  * An instance named **textLengthProcessor** that should implement **Function<KStream<String, TextEvent>, KStream<String, LengthEvent>>** interface
+  * An instance named **lengthConsumer** that should implement **Consumer<LengthEvent>** interface
 
 💡 We use different values for the Kafka Streams **applicationId** and the Kafka Consumers **group** to avoid undesired behaviors.
-💡 We are using **Spring Cloud Stream**'s default serialization/deserialization of **Kotlin** data classes to Json. In order for this to work we need to add **com.fasterxml.jackson.module:jackson-module-kotlin** dependency.
+💡 We are using Spring Cloud Stream's default serialization/deserialization of Kotlin data classes to Json. In order for this to work we need to add **com.fasterxml.jackson.module:jackson-module-kotlin** dependency.
 💡 You can find all the available configuration properties documented in:
 * [Kafka binder properties](https://github.com/spring-cloud/spring-cloud-stream-binder-kafka#kafka-binder-properties)
 * [Kafka Streams binder properties](https://cloud.spring.io/spring-cloud-stream-binder-kafka/spring-cloud-stream-binder-kafka.html#_kafka_streams_properties)
 
-### TextProducer
+## TextProducer
 
-First we need this TextProducer interface that we will implement later:
+We create TextProducer interface to be implemented later:
 
 ```kotlin
 data class TextEvent(val text: String)
@@ -133,9 +134,9 @@ interface TextProducer {
 }
 ```
 
-### TextController
+## TextController
 
-First the test ...
+Once we have the test ...
 
 ```kotlin
 @WebFluxTest(controllers = [TextController::class])
@@ -161,7 +162,7 @@ class TextControllerTest {
 }
 ```
 
-then the implementation is easy:
+... the implementation is easy:
 
 ```kotlin
 @RestController
@@ -174,7 +175,7 @@ class TextController(private val textProducer: TextProducer) {
 }
 ```
 
-### TextProducer implementation
+## TextProducer implementation
 
 We implement TextProducer using Spring Cloud Stream like this:
 
@@ -213,9 +214,9 @@ fun `should produce text events`() {
 }
 ```
 
-### TextLengthProcessor
+## TextLengthProcessor
 
-An easy implementation of the transformation using Kafka Stream's mapValues:
+We implement the transformation using Kafka Stream's mapValues method:
 
 ```kotlin
 class TextLengthProcessor : Function<KStream<String, TextEvent>, KStream<String, LengthEvent>> {
@@ -227,7 +228,7 @@ class TextLengthProcessor : Function<KStream<String, TextEvent>, KStream<String,
 }
 ```
 
-That we can test using **kafka-streams-test-utils**:
+And we can test it using **kafka-streams-test-utils**:
 
 ```kotlin
 private const val TOPIC_IN = "topic.in"
@@ -285,7 +286,7 @@ internal class TextLengthProcessorTest {
 }
 ```
 
-### LengthConsumer
+## LengthConsumer
 
 **LengthStreamConsumer** implements **Consumer<LengthEvent>** as expected by Spring Cloud Stream conventions. We decouple the final implementation using the interface **LengthProcessor**:
 
@@ -323,7 +324,7 @@ fun `should consume length events`() {
 }
 ```
 
-### LengthConsumer implementation
+## LengthConsumer implementation
 
 For this demo the implementation just logs the event:
 
@@ -355,9 +356,9 @@ internal class LengthConsoleProcessorTest {
 }
 ```
 
-### Wiring all together
+## Wiring it all together
 
-We only need to create all the required **@Beans** naming them according to the binder configuration:
+We only need to create all the required instances naming them accordingly to the binder configuration:
 
 ```kotlin
 @Configuration
@@ -391,7 +392,6 @@ Happy coding!
 
 ## Run this demo
 
-Run with docker-compose:
 ```shell
 docker-compose up -d
 ./gradlew bootRun
@@ -400,7 +400,9 @@ docker-compose down
 
 Use [curl](https://curl.se/) or [httpie](https://httpie.io/) or any other tool you like to POST a /text request:
 ```shell
-curl -v -X POST http://localhost:8080/text -d "Toto, I have a feeling we are not in Kansas anymore"
+curl -v -X POST http://localhost:8080/text \
+ -H "Content-Type: text/plain" \
+ -d "Toto, I have a feeling we are not in Kansas anymore"
 ```
 
 Use [kcat](https://github.com/edenhill/kcat) (formerly know as **kafkacat**) to produce/consume to/from **Kafka**:
@@ -410,5 +412,12 @@ kcat -b localhost:9094 -C -t pub.texts -f '%k %s\n'
 kcat -b localhost:9094 -C -t pub.lengths -f '%k %s\n'
 
 # produce
-echo 'key1:{"text":"Toto, I have a feeling we are not in Kansas anymore"}' | kcat -b localhost:9094 -P -t pub.texts -K:
+echo 'key1:{"text":"I feel the need - the need for speed!"}' \
+ | kcat -b localhost:9094 -P -t pub.texts -K:
 ```
+
+## See also
+
+:octocat: [Spring Cloud Stream Kafka step by step](https://github.com/rogervinas/spring-cloud-stream-kafka-step-by-step)
+
+:octocat: [Spring Cloud Stream & Kafka Streams Binder first steps](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps)
