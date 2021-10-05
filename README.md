@@ -380,7 +380,7 @@ class MyApplicationConfiguration {
 }
 ```
 
-💡 **textLengthProcessor** type should be specified explicitly, if not the Kafka Streams binder will not use it 🤷
+🤷 **textLengthProcessor** type should be specified explicitly, if not the Kafka Streams binder will not use it.
 
 And that is it, now [MyApplicationIntegrationTest](src/test/kotlin/com/rogervinas/multibinder/MyApplicationIntegrationTest.kt) should work! 🤞
 
