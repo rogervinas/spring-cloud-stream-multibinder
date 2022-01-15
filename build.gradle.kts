@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("org.springframework.boot") version "2.5.4"
+  id("org.springframework.boot") version "2.6.2"
   id("io.spring.dependency-management") version "1.0.11.RELEASE"
-  kotlin("jvm") version "1.5.21"
-  kotlin("plugin.spring") version "1.5.21"
+  kotlin("jvm") version "1.6.10"
+  kotlin("plugin.spring") version "1.6.10"
 }
 
 group = "com.rogervinas"
@@ -15,7 +15,7 @@ repositories {
   mavenCentral()
 }
 
-extra["springCloudVersion"] = "2020.0.3"
+extra["springCloudVersion"] = "2021.0.0"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -28,7 +28,7 @@ dependencies {
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.apache.kafka:kafka-streams-test-utils")
-  testImplementation("org.testcontainers:junit-jupiter:1.16.0")
+  testImplementation("org.testcontainers:junit-jupiter:1.16.2")
 }
 
 dependencyManagement {
