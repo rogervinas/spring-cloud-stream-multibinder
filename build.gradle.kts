@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -46,4 +48,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
   useJUnitPlatform()
+  testLogging {
+    events(PASSED, SKIPPED, FAILED)
+    exceptionFormat = FULL
+    showExceptions = true
+    showCauses = true
+    showStackTraces = true
+  }
 }
