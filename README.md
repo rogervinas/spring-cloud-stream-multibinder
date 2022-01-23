@@ -439,4 +439,4 @@ echo 'key1:{"text":"I feel the need - the need for speed!"}' \
 
 :octocat: [Spring Cloud Stream & Kafka Streams Binder first steps](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps)
   
-:octocat: [Spring Cloud Stream & Kafka Streams Processor](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
+:octocat: [Spring Cloud Stream & Kafka Streams Binder + Processor API](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
