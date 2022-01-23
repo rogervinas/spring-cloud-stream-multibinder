@@ -17,6 +17,21 @@ Not a problem! You can specify multiple binder configurations as documented in [
 
 Let's put the theory into practice 🛠️ ...
 
+* [Goal](#goal)
+* [Create the project](#create-the-project)
+* [Integration Test](#integration-test)
+* [Spring Cloud Stream binders configuration](#spring-cloud-stream-binders-configuration)
+* [TextProducer](#textproducer)
+* [TextController](#textcontroller)
+* [TextProducer implementation](#textproducer-implementation)
+* [TextLengthProcessor](#textlengthprocessor)
+* [LengthConsumer](#lengthconsumer)
+* [LengthConsumer implementation](#lengthconsumer-implementation)
+* [Wiring it all together](#wiring-it-all-together)
+* [Test this demo](#test-this-demo)
+* [Run this demo](#run-this-demo)
+* [See also](#see-also)
+
 ## Goal
 
 We want to implement this flow:
@@ -423,3 +438,5 @@ echo 'key1:{"text":"I feel the need - the need for speed!"}' \
 :octocat: [Spring Cloud Stream Kafka step by step](https://github.com/rogervinas/spring-cloud-stream-kafka-step-by-step)
 
 :octocat: [Spring Cloud Stream & Kafka Streams Binder first steps](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps)
+  
+:octocat: [Spring Cloud Stream & Kafka Streams Processor](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
