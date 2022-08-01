@@ -30,7 +30,11 @@ Let's put the theory into practice 🛠️ ...
 * [Wiring it all together](#wiring-it-all-together)
 * [Test this demo](#test-this-demo)
 * [Run this demo](#run-this-demo)
-* [See also](#see-also)
+* See also
+  * :octocat: [Spring Cloud Stream Kafka step by step](https://github.com/rogervinas/spring-cloud-stream-kafka-step-by-step)
+  * :octocat: [Spring Cloud Stream & Kafka Confluent Avro Schema Registry](https://github.com/rogervinas/spring-cloud-stream-kafka-confluent-avro-schema-registry)
+  * :octocat: [Spring Cloud Stream & Kafka Streams Binder first steps](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps)
+  * :octocat: [Spring Cloud Stream & Kafka Streams Binder + Processor API](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
 
 ## Goal
 
@@ -432,11 +436,3 @@ kcat -b localhost:9094 -C -t pub.lengths -f '%k %s\n'
 echo 'key1:{"text":"I feel the need - the need for speed!"}' \
  | kcat -b localhost:9094 -P -t pub.texts -K:
 ```
-
-## See also
-
-:octocat: [Spring Cloud Stream Kafka step by step](https://github.com/rogervinas/spring-cloud-stream-kafka-step-by-step)
-
-:octocat: [Spring Cloud Stream & Kafka Streams Binder first steps](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps)
-  
-:octocat: [Spring Cloud Stream & Kafka Streams Binder + Processor API](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
