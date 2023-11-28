@@ -30,7 +30,7 @@ dependencies {
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.apache.kafka:kafka-streams-test-utils")
-  testImplementation("org.testcontainers:junit-jupiter:1.16.2")
+  testImplementation("org.testcontainers:junit-jupiter:1.19.3")
 }
 
 dependencyManagement {
