@@ -10,7 +10,7 @@ internal class TextStreamProducerTest {
     val producer = TextStreamProducer()
 
     val events = mutableListOf<TextEvent>()
-    producer.invoke().subscribe(events::add)
+    producer.get().subscribe(events::add)
 
     producer.produce(TextEvent("Well"))
     producer.produce(TextEvent("nobody is"))
