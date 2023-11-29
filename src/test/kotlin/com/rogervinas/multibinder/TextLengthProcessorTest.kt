@@ -34,7 +34,7 @@ internal class TextLengthProcessorTest {
     val streamsBuilder = StreamsBuilder()
 
     TextLengthProcessor()
-      .apply(streamsBuilder.stream(TOPIC_IN))
+      .invoke(streamsBuilder.stream(TOPIC_IN))
       .to(TOPIC_OUT)
 
     val config = Properties().apply {
