@@ -40,6 +40,9 @@ Let's put the theory into practice 🛠️ ...
   * :octocat: [Spring Cloud Stream & Kafka Streams Binder first steps](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps)
   * :octocat: [Spring Cloud Stream & Kafka Streams Binder + Processor API](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
 
+You can browse older versions of this repo:
+* [Spring Boot 2.x](https://github.com/rogervinas/spring-cloud-stream-multibinder/tree/spring-boot-2.x)
+
 ## Goal
 
 We want to implement this flow:
