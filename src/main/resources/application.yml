@@ -4,7 +4,7 @@ spring:
   cloud:
     stream:
       function:
-        definition: textProducer;textLengthProcessor;lengthConsumer
+        definition: text-producer;text-length-processor;length-consumer
       bindings:
         text-producer-out-0:
           destination: "${kafka.topic.texts}"

@@ -29,6 +29,9 @@ dependencies {
   implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka-streams")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+  // Support Apple Silicon/M1 machines
+  implementation("org.rocksdb:rocksdbjni:6.29.5")
+
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.apache.kafka:kafka-streams-test-utils")
   testImplementation("org.testcontainers:testcontainers:1.19.3")
