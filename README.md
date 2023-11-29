@@ -96,9 +96,9 @@ spring:
   application:
     name: "spring-cloud-stream-multibinder"
   cloud:
+    function:
+      definition: textProducer;textLengthProcessor;lengthConsumer
     stream:
-      function:
-        definition: textProducer;textLengthProcessor;lengthConsumer
       bindings:
         textProducer-out-0:
           destination: "${kafka.topic.texts}"
