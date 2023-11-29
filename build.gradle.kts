@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("org.springframework.boot") version "3.2.0"
+  id("org.springframework.boot") version "3.1.6"
   id("io.spring.dependency-management") version "1.1.4"
   kotlin("jvm") version "1.9.21"
   kotlin("plugin.spring") version "1.9.21"
@@ -15,10 +15,9 @@ java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
   mavenCentral()
-  maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-val springCloudVersion = "2023.0.0-RC1"
+val springCloudVersion = "2022.0.4"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
