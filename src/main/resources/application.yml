@@ -3,19 +3,19 @@ spring:
     name: "spring-cloud-stream-multibinder"
   cloud:
     function:
-      definition: text-producer;text-length-processor;length-consumer
+      definition: textProducer;textLengthProcessor;lengthConsumer
     stream:
       bindings:
-        text-producer-out-0:
+        textProducer-out-0:
           destination: "${kafka.topic.texts}"
           binder: kafka1
-        text-length-processor-in-0:
+        textLengthProcessor-in-0:
           destination: "${kafka.topic.texts}"
           binder: kstream1
-        text-length-processor-out-0:
+        textLengthProcessor-out-0:
           destination: "${kafka.topic.lengths}"
           binder: kstream1
-        length-consumer-in-0:
+        lengthConsumer-in-0:
           destination: "${kafka.topic.lengths}"
           group: "${spring.application.name}"
           binder: kafka1

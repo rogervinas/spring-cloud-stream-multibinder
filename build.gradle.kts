@@ -12,13 +12,12 @@ plugins {
 group = "com.rogervinas"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
   mavenCentral()
 }
 
-extra["springCloudVersion"] = "2021.0.8"
+val springCloudVersion = "2021.0.8"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -37,7 +36,7 @@ dependencies {
 
 dependencyManagement {
   imports {
-    mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
   }
 }
 

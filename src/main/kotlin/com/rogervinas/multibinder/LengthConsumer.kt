@@ -1,6 +1,7 @@
 package com.rogervinas.multibinder
 
 import org.slf4j.LoggerFactory
+import java.util.function.Consumer
 
 data class LengthEvent(val length: Int)
 
@@ -17,9 +18,9 @@ class LengthConsoleProcessor : LengthProcessor {
   }
 }
 
-class LengthStreamConsumer(private val processor: LengthProcessor) : (LengthEvent) -> Unit {
+class LengthStreamConsumer(private val processor: LengthProcessor) : Consumer<LengthEvent> {
 
-  override fun invoke(event: LengthEvent) {
+  override fun accept(event: LengthEvent) {
     processor.process(event)
   }
 }
