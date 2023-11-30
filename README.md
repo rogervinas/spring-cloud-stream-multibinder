@@ -145,7 +145,7 @@ kafka:
     * In **Kotlin**: the same, there is no support for lambdas yet 😅
   * A bean named **lengthConsumer** that should implement:
     * In **Java**: `Consumer<LengthEvent>` interface
-    * In **Kotlin**: `(LengthEvent>) -> Unit` lambda
+    * In **Kotlin**: `(LengthEvent) -> Unit` lambda
 
 💡 We use different values for the Kafka Streams **applicationId** and the Kafka Consumers **group** to avoid undesired behaviors.
 
