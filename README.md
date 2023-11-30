@@ -3,7 +3,6 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue?labelColor=black)
 ![SpringBoot](https://img.shields.io/badge/SpringBoot-3.1.6-blue?labelColor=black)
 ![SpringCloud](https://img.shields.io/badge/SpringCloud-2022.0.4-blue?labelColor=black)
->>>>>>> master
 
 # Spring Cloud Stream Multibinder
 
