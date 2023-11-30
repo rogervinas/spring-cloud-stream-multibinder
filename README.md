@@ -430,7 +430,7 @@ Please note that:
 
 And that is it, now [MyApplicationIntegrationTest](src/test/kotlin/com/rogervinas/multibinder/MyApplicationIntegrationTest.kt) should work! 🤞
 
-Happy coding!
+Happy coding! 💙
 
 ## Test this demo
 
