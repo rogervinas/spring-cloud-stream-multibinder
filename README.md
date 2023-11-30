@@ -157,7 +157,6 @@ We create TextProducer interface to be implemented later:
 data class TextEvent(val text: String)
 
 interface TextProducer {
-
   fun produce(event: TextEvent)
 }
 ```
@@ -208,7 +207,7 @@ class TextController(private val textProducer: TextProducer) {
 We implement TextProducer using Spring Cloud Stream like this:
 
 ```kotlin
-class TextStreamProducer : Supplier<Flux<TextEvent>>, TextProducer {
+class TextFluxProducer : () -> Flux<TextEvent>, TextProducer {
 
   private val sink = Sinks.many().unicast().onBackpressureBuffer<TextEvent>()
 
@@ -216,7 +215,7 @@ class TextStreamProducer : Supplier<Flux<TextEvent>>, TextProducer {
     sink.emitNext(event, FAIL_FAST)
   }
 
-  override fun get() = sink.asFlux()
+  override fun invoke() = sink.asFlux()
 }
 ```
 
@@ -225,7 +224,7 @@ And we can easily test the implementation as follows:
 ```kotlin
 @Test
 fun `should produce text events`() {
-  val producer = TextStreamProducer()
+  val producer = TextFluxProducer()
 
   val events = mutableListOf<TextEvent>()
   producer.get().subscribe(events::add)
@@ -316,19 +315,18 @@ internal class TextLengthProcessorTest {
 
 ## LengthConsumer
 
-**LengthStreamConsumer** implements **Consumer<LengthEvent>** as expected by Spring Cloud Stream conventions. We decouple the final implementation using the interface **LengthProcessor**:
+**LengthStreamConsumer** implements **(LengthEvent) -> Unit** as expected by Spring Cloud Stream conventions. We decouple the final implementation using the interface **LengthProcessor**:
 
 ```kotlin
 data class LengthEvent(val length: Int)
 
 interface LengthProcessor {
-
   fun process(event: LengthEvent)
 }
 
-class LengthStreamConsumer(private val processor: LengthProcessor) : Consumer<LengthEvent> {
+class LengthStreamConsumer(private val processor: LengthProcessor) : (LengthEvent) -> Unit {
 
-  override fun accept(event: LengthEvent) {
+  override fun invoke(event: LengthEvent) {
     processor.process(event)
   }
 }
@@ -342,9 +340,9 @@ fun `should consume length events`() {
   val lengthProcessor = mock(LengthProcessor::class.java)
   val lengthStreamConsumer = LengthStreamConsumer(lengthProcessor)
 
-  lengthStreamConsumer.accept(LengthEvent(10))
-  lengthStreamConsumer.accept(LengthEvent(20))
-  lengthStreamConsumer.accept(LengthEvent(30))
+  lengthStreamConsumer(LengthEvent(10))
+  lengthStreamConsumer(LengthEvent(20))
+  lengthStreamConsumer(LengthEvent(30))
 
   verify(lengthProcessor).process(LengthEvent(10))
   verify(lengthProcessor).process(LengthEvent(20))
@@ -393,20 +391,32 @@ We only need to create all the required instances naming them accordingly to the
 class MyApplicationConfiguration {
 
   @Bean
-  fun textProducer() = TextStreamProducer()
+  fun textFluxProducer() = TextFluxProducer()
 
   @Bean
-  fun textLengthProcessor(): Function<KStream<String, TextEvent>, KStream<String, LengthEvent>> = TextLengthProcessor()
+  fun textProducer(textProducer: TextFluxProducer): () -> Flux<TextEvent> = textProducer
 
   @Bean
-  fun lengthConsumer(lengthProcessor: LengthProcessor) = LengthStreamConsumer(lengthProcessor)
+  fun textLengthProcessor(): Function<KStream<String, TextEvent>, KStream<String, LengthEvent>> =
+    TextLengthProcessor()
 
   @Bean
-  fun lengthProcessor() = LengthConsoleProcessor()
+  fun lengthConsumer(lengthProcessor: LengthProcessor): (LengthEvent) -> Unit =
+    LengthStreamConsumer(lengthProcessor)
+
+  @Bean
+  fun lengthConsoleProcessor() = LengthConsoleProcessor()
 }
 ```
 
-🤷 **textLengthProcessor** type should be specified explicitly, if not the Kafka Streams binder will not use it.
+Please note that:
+* The three Spring Cloud functions defined in [application.yml](src/main/resources/application.yml) will be bound **by name** to the beans `textProducer`, `textLengthProcessor` and `lengthConsumer`.
+  * For the Kafka binder ones, `textProducer` and `lengthConsumer`, we have to **define them explicitly as kotlin lambdas** (required by `KotlinLambdaToFunctionAutoConfiguration`).
+    * If we were using **java** we should use `java.util.function` types: `Supplier` and `Consumer`.
+  * For the Kafka Stream binder one, `textLengthProcessor`, we have to **define it explicitly as a `java.util.function.Function`**, there is no support for kotlin lambdas yet (check `KafkaStreamsFunctionBeanPostProcessor`).
+* Beans `textFluxProducer` and `textProducer` return the same instance ...
+  * We need `textFluxProducer` to inject it whenever a `TextProducer` interface is needed (the `TextController` for example).
+  * We need `textProducer` to bind it to the `textProducer` Spring Cloud function required by the Kafka binder.
 
 And that is it, now [MyApplicationIntegrationTest](src/test/kotlin/com/rogervinas/multibinder/MyApplicationIntegrationTest.kt) should work! 🤞
 

@@ -11,9 +11,9 @@ internal class LengthStreamConsumerTest {
     val lengthProcessor = mock(LengthProcessor::class.java)
     val lengthStreamConsumer = LengthStreamConsumer(lengthProcessor)
 
-    lengthStreamConsumer.accept(LengthEvent(10))
-    lengthStreamConsumer.accept(LengthEvent(20))
-    lengthStreamConsumer.accept(LengthEvent(30))
+    lengthStreamConsumer(LengthEvent(10))
+    lengthStreamConsumer(LengthEvent(20))
+    lengthStreamConsumer(LengthEvent(30))
 
     verify(lengthProcessor).process(LengthEvent(10))
     verify(lengthProcessor).process(LengthEvent(20))
