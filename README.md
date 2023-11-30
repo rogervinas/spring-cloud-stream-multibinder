@@ -138,14 +138,14 @@ kafka:
   * A **Kafka binder** connected to **localhost:9094**
 * Following the **Spring Cloud Stream functional programming model conventions** we should create:
   * A bean named **textProducer** that should implement:
-    * In **Java**: **Supplier<Flux<TextEvent>>** interface
-    * In **Kotlin**: **() -> Flux<TextEvent>** lambda
+    * In **Java**: `Supplier<Flux<TextEvent>>` interface
+    * In **Kotlin**: `() -> Flux<TextEvent>` lambda
   * A bean named **textLengthProcessor** that should implement:
-    * In **Java**: **Function<KStream<String, TextEvent>, KStream<String, LengthEvent>>** interface
+    * In **Java**: `Function<KStream<String, TextEvent>, KStream<String, LengthEvent>>` interface
     * In **Kotlin**: the same, there is no support for lambdas yet 😅
   * A bean named **lengthConsumer** that should implement:
-    * In **Java**: **Consumer<LengthEvent>** interface
-    * In **Kotlin**: **(LengthEvent>) -> Unit** lambda
+    * In **Java**: `Consumer<LengthEvent>` interface
+    * In **Kotlin**: `(LengthEvent) -> Unit` lambda
 
 💡 We use different values for the Kafka Streams **applicationId** and the Kafka Consumers **group** to avoid undesired behaviors.
 
@@ -422,8 +422,8 @@ class MyApplicationConfiguration {
 Please note that:
 * The three Spring Cloud functions defined in [application.yml](src/main/resources/application.yml) will be bound **by name** to the beans **textProducer**, **textLengthProcessor** and **lengthConsumer**.
   * For the Kafka binder ones, **textProducer** and **lengthConsumer**, we have to **define them explicitly as Kotlin lambdas** (required by **KotlinLambdaToFunctionAutoConfiguration**).
-    * If we were using **Java** we should use **java.util.function** types: **Supplier** and **Consumer**.
-  * For the Kafka Stream binder one, **textLengthProcessor**, we have to **define it explicitly as a java.util.function.Function**, there is no support for **Kotlin** lambdas yet (check **KafkaStreamsFunctionBeanPostProcessor**).
+    * If we were using **Java** we should use `java.util.function` types: `Supplier` and `Consumer`.
+  * For the Kafka Stream binder one, **textLengthProcessor**, we have to **define it explicitly as a `java.util.function.Function`**, there is no support for **Kotlin** lambdas yet (check **KafkaStreamsFunctionBeanPostProcessor**).
 * Beans **textFluxProducer** and **textProducer** return the same instance ...
   * We need **textFluxProducer** to inject it whenever a **TextProducer** interface is needed (the **TextController** for example).
   * We need **textProducer** to bind it to the **textProducer** Spring Cloud function required by the Kafka binder.
