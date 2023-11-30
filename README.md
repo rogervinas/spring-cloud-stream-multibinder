@@ -54,7 +54,7 @@ We want to implement this flow:
 * A **KafkaStreams** transformation will consume from topic **pub.texts** and produce events to topic **pub.lengths** as `{ "length" : number }`
 * A **KafkaConsumer** will consume events from topic **pub.lengths** and log them to the console
 
-So we will use two Spring Cloud Stream binders:
+So we will use two **Spring Cloud Stream** binders:
 * **Kafka**
 * **Kafka Streams**
 
@@ -133,10 +133,10 @@ kafka:
   brokers: "localhost:9094"
 ```
 
-* Spring Cloud Stream will create:
+* **Spring Cloud Stream** will create:
   * A **Kafka Streams binder** connected to **localhost:9094**
   * A **Kafka binder** connected to **localhost:9094**
-* Following the Spring Cloud Stream *functional programming model conventions* we should create:
+* Following the **Spring Cloud Stream functional programming model conventions** we should create:
   * A bean named **textProducer** that should implement:
     * In **Java**: **Supplier<Flux<TextEvent>>** interface
     * In **Kotlin**: **() -> Flux<TextEvent>** lambda
@@ -149,7 +149,7 @@ kafka:
 
 💡 We use different values for the Kafka Streams **applicationId** and the Kafka Consumers **group** to avoid undesired behaviors.
 
-💡 We are using Spring Cloud Stream's default serialization/deserialization of Kotlin data classes to Json. In order for this to work we need to add **com.fasterxml.jackson.module:jackson-module-kotlin** dependency.
+💡 We are using **Spring Cloud Stream**'s default serialization/deserialization of Kotlin data classes to Json. In order for this to work we need to add **com.fasterxml.jackson.module:jackson-module-kotlin** dependency.
 
 💡 You can find all the available configuration properties documented in:
 * [Kafka binder properties](https://github.com/spring-cloud/spring-cloud-stream-binder-kafka#kafka-binder-properties)
@@ -210,7 +210,7 @@ class TextController(private val textProducer: TextProducer) {
 
 ## TextProducer implementation
 
-We implement **TextProducer** as expected by Spring Cloud Stream conventions like this:
+We implement **TextProducer** as expected by **Spring Cloud Stream** conventions like this:
 
 ```kotlin
 class TextFluxProducer : () -> Flux<TextEvent>, TextProducer {
@@ -321,7 +321,7 @@ internal class TextLengthProcessorTest {
 
 ## LengthConsumer
 
-We implement **LengthStreamConsumer** as expected by Spring Cloud Stream conventions like this:
+We implement **LengthStreamConsumer** as expected by **Spring Cloud Stream** conventions like this:
 
 ```kotlin
 data class LengthEvent(val length: Int)
@@ -453,7 +453,7 @@ curl -v -X POST http://localhost:8080/text \
  -d "Toto, I have a feeling we are not in Kansas anymore"
 ```
 
-Use [kcat](https://github.com/edenhill/kcat) (formerly know as **kafkacat**) to produce/consume to/from **Kafka**:
+Use [kcat](https://github.com/edenhill/kcat) (formerly know as **kafkacat**) to produce/consume to/from Kafka:
 ```shell
 # consume
 kcat -b localhost:9094 -C -t pub.texts -f '%k %s\n'
