@@ -3,14 +3,14 @@ package com.rogervinas.multibinder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class TextStreamProducerTest {
+internal class TextFluxProducerTest {
 
   @Test
   fun `should produce text events`() {
-    val producer = TextStreamProducer()
+    val producer = TextFluxProducer()
 
     val events = mutableListOf<TextEvent>()
-    producer.get().subscribe(events::add)
+    producer().subscribe(events::add)
 
     producer.produce(TextEvent("Well"))
     producer.produce(TextEvent("nobody is"))

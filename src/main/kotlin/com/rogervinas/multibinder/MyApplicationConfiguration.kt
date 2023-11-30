@@ -10,18 +10,19 @@ import java.util.function.Function
 class MyApplicationConfiguration {
 
   @Bean
-  fun textStreamProducer() = TextStreamProducer()
+  fun textFluxProducer() = TextFluxProducer()
 
   @Bean
-  fun textProducer(textStreamProducer: TextStreamProducer): () -> Flux<TextEvent> = textStreamProducer::get
+  fun textProducer(textProducer: TextFluxProducer): () -> Flux<TextEvent> = textProducer
 
   @Bean
-  fun textLengthProcessor(): Function<KStream<String, TextEvent>, KStream<String, LengthEvent>> = TextLengthProcessor()
+  fun textLengthProcessor(): Function<KStream<String, TextEvent>, KStream<String, LengthEvent>> =
+    TextLengthProcessor()
 
   @Bean
   fun lengthConsumer(lengthProcessor: LengthProcessor): (LengthEvent) -> Unit =
-    LengthStreamConsumer(lengthProcessor)::accept
+    LengthStreamConsumer(lengthProcessor)
 
   @Bean
-  fun lengthProcessor() = LengthConsoleProcessor()
+  fun lengthConsoleProcessor() = LengthConsoleProcessor()
 }
