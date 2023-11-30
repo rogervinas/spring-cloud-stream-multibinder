@@ -3,21 +3,26 @@ package com.rogervinas.multibinder
 import org.apache.kafka.streams.kstream.KStream
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import reactor.core.publisher.Flux
 import java.util.function.Function
 
 @Configuration
 class MyApplicationConfiguration {
 
   @Bean
-  fun textProducer() = TextStreamProducer()
+  fun textFluxProducer() = TextFluxProducer()
 
   @Bean
-  fun textLengthProcessor(): Function<KStream<String, TextEvent>, KStream<String, LengthEvent>> = TextLengthProcessor()
+  fun textProducer(textProducer: TextFluxProducer): () -> Flux<TextEvent> = textProducer
 
   @Bean
-  fun lengthConsumer(lengthProcessor: LengthProcessor) = LengthStreamConsumer(lengthProcessor)
+  fun textLengthProcessor(): Function<KStream<String, TextEvent>, KStream<String, LengthEvent>> =
+    TextLengthProcessor()
 
   @Bean
-  fun lengthProcessor() = LengthConsoleProcessor()
+  fun lengthConsumer(lengthProcessor: LengthProcessor): (LengthEvent) -> Unit =
+    LengthStreamConsumer(lengthProcessor)
+
+  @Bean
+  fun lengthConsoleProcessor() = LengthConsoleProcessor()
 }
-
