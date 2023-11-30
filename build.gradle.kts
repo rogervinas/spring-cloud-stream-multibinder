@@ -3,7 +3,6 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-<<<<<<< HEAD
   id("org.springframework.boot") version "3.1.6"
   id("io.spring.dependency-management") version "1.1.4"
   kotlin("jvm") version "1.9.21"
