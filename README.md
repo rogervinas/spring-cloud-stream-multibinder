@@ -49,10 +49,10 @@ We want to implement this flow:
 
 ![Diagram1](doc/diagram1.png)
 
-* User will POST string payloads to `/text` endpoint
-* A **KafkaProducer** will send these payloads to topic `pub.texts` as `{ "text" : string }`
-* A **KafkaStreams** transformation will consume from topic `pub.texts` and produce events to topic `pub.lengths` as `{ "length" : number }`
-* A **KafkaConsumer** will consume events from topic `pub.lengths` and log them to the console
+* User will POST string payloads to **/text** endpoint
+* A **KafkaProducer** will send these payloads to topic **pub.texts** as `{ "text" : string }`
+* A **KafkaStreams** transformation will consume from topic **pub.texts** and produce events to topic **pub.lengths** as `{ "length" : number }`
+* A **KafkaConsumer** will consume events from topic **pub.lengths** and log them to the console
 
 So we will use two Spring Cloud Stream binders:
 * **Kafka**
@@ -61,8 +61,8 @@ So we will use two Spring Cloud Stream binders:
 ## Create the project
 
 We use this [spring initializr configuration](https://start.spring.io/#!type=gradle-project&language=kotlin&packaging=jar&groupId=com.rogervinas&artifactId=springcloudstreammultibinder&name=springcloudstreammultibinder&description=Spring%20Cloud%20Streams%20%26%20Kafka%20Streams%20Binder&packageName=com.rogervinas.springcloudstreammultibinder&dependencies=cloud-stream) and we add:
-* **Kafka** binder lib `spring-cloud-stream-binder-kafka`
-* **Kafka Streams** binder lib `spring-cloud-stream-binder-kafka-streams`
+* **Kafka** binder lib **spring-cloud-stream-binder-kafka**
+* **Kafka Streams** binder lib **spring-cloud-stream-binder-kafka-streams**
 
 ## Integration Test
 
@@ -134,22 +134,22 @@ kafka:
 ```
 
 * Spring Cloud Stream will create:
-  * A **Kafka Streams binder** connected to `localhost:9094`
-  * A **Kafka binder** connected to `localhost:9094`
+  * A **Kafka Streams binder** connected to **localhost:9094**
+  * A **Kafka binder** connected to **localhost:9094**
 * Following the Spring Cloud Stream *functional programming model conventions* we should create:
-  * A bean named `textProducer` that should implement:
-    * In **Java**: `Supplier<Flux<TextEvent>>` interface
-    * In **Kotlin**: `() -> Flux<TextEvent>` lambda
-  * A bean named `textLengthProcessor` that should implement:
-    * In **Java**: `Function<KStream<String, TextEvent>, KStream<String, LengthEvent>>` interface
+  * A bean named **textProducer** that should implement:
+    * In **Java**: **Supplier<Flux<TextEvent>>** interface
+    * In **Kotlin**: **() -> Flux<TextEvent>** lambda
+  * A bean named **textLengthProcessor** that should implement:
+    * In **Java**: **Function<KStream<String, TextEvent>, KStream<String, LengthEvent>>** interface
     * In **Kotlin**: the same, there is no support for lambdas yet 😅
-  * A bean named `lengthConsumer` that should implement:
-    * In **Java**: `Consumer<LengthEvent>` interface
-    * In **Kotlin**: `(LengthEvent>) -> Unit` lambda
+  * A bean named **lengthConsumer** that should implement:
+    * In **Java**: **Consumer<LengthEvent>** interface
+    * In **Kotlin**: **(LengthEvent>) -> Unit** lambda
 
-💡 We use different values for the Kafka Streams `applicationId` and the Kafka Consumers `group` to avoid undesired behaviors.
+💡 We use different values for the Kafka Streams **applicationId** and the Kafka Consumers **group** to avoid undesired behaviors.
 
-💡 We are using Spring Cloud Stream's default serialization/deserialization of Kotlin data classes to Json. In order for this to work we need to add `com.fasterxml.jackson.module:jackson-module-kotlin` dependency.
+💡 We are using Spring Cloud Stream's default serialization/deserialization of Kotlin data classes to Json. In order for this to work we need to add **com.fasterxml.jackson.module:jackson-module-kotlin** dependency.
 
 💡 You can find all the available configuration properties documented in:
 * [Kafka binder properties](https://github.com/spring-cloud/spring-cloud-stream-binder-kafka#kafka-binder-properties)
@@ -157,7 +157,7 @@ kafka:
 
 ## TextProducer
 
-We create `TextProducer` interface to be implemented later:
+We create **TextProducer** interface to be implemented later:
 
 ```kotlin
 data class TextEvent(val text: String)
@@ -210,7 +210,7 @@ class TextController(private val textProducer: TextProducer) {
 
 ## TextProducer implementation
 
-We implement `TextProducer` as expected by Spring Cloud Stream conventions like this:
+We implement **TextProducer** as expected by Spring Cloud Stream conventions like this:
 
 ```kotlin
 class TextFluxProducer : () -> Flux<TextEvent>, TextProducer {
@@ -261,7 +261,7 @@ class TextLengthProcessor : Function<KStream<String, TextEvent>, KStream<String,
 }
 ```
 
-And we can test it using `kafka-streams-test-utils`:
+And we can test it using **kafka-streams-test-utils**:
 
 ```kotlin
 private const val TOPIC_IN = "topic.in"
@@ -321,7 +321,7 @@ internal class TextLengthProcessorTest {
 
 ## LengthConsumer
 
-We implement `LengthStreamConsumer` as expected by Spring Cloud Stream conventions like this:
+We implement **LengthStreamConsumer** as expected by Spring Cloud Stream conventions like this:
 
 ```kotlin
 data class LengthEvent(val length: Int)
@@ -334,7 +334,7 @@ class LengthStreamConsumer(private val processor: LengthProcessor) : (LengthEven
 }
 ```
 
-We decouple the final implementation using the interface `LengthProcessor`:
+We decouple the final implementation using the interface **LengthProcessor**:
 
 ```kotlin
 interface LengthProcessor {
@@ -420,13 +420,13 @@ class MyApplicationConfiguration {
 ```
 
 Please note that:
-* The three Spring Cloud functions defined in [application.yml](src/main/resources/application.yml) will be bound **by name** to the beans `textProducer`, `textLengthProcessor` and `lengthConsumer`.
-  * For the Kafka binder ones, `textProducer` and `lengthConsumer`, we have to **define them explicitly as Kotlin lambdas** (required by `KotlinLambdaToFunctionAutoConfiguration`).
-    * If we were using **Java** we should use `java.util.function` types: `Supplier` and `Consumer`.
-  * For the Kafka Stream binder one, `textLengthProcessor`, we have to **define it explicitly as a `java.util.function.Function`**, there is no support for **Kotlin** lambdas yet (check `KafkaStreamsFunctionBeanPostProcessor`).
-* Beans `textFluxProducer` and `textProducer` return the same instance ...
-  * We need `textFluxProducer` to inject it whenever a `TextProducer` interface is needed (the `TextController` for example).
-  * We need `textProducer` to bind it to the `textProducer` Spring Cloud function required by the Kafka binder.
+* The three Spring Cloud functions defined in [application.yml](src/main/resources/application.yml) will be bound **by name** to the beans **textProducer**, **textLengthProcessor** and **lengthConsumer**.
+  * For the Kafka binder ones, **textProducer** and **lengthConsumer**, we have to **define them explicitly as Kotlin lambdas** (required by **KotlinLambdaToFunctionAutoConfiguration**).
+    * If we were using **Java** we should use **java.util.function** types: **Supplier** and **Consumer**.
+  * For the Kafka Stream binder one, **textLengthProcessor**, we have to **define it explicitly as a java.util.function.Function**, there is no support for **Kotlin** lambdas yet (check **KafkaStreamsFunctionBeanPostProcessor**).
+* Beans **textFluxProducer** and **textProducer** return the same instance ...
+  * We need **textFluxProducer** to inject it whenever a **TextProducer** interface is needed (the **TextController** for example).
+  * We need **textProducer** to bind it to the **textProducer** Spring Cloud function required by the Kafka binder.
 
 And that is it, now [MyApplicationIntegrationTest](src/test/kotlin/com/rogervinas/multibinder/MyApplicationIntegrationTest.kt) should work! 🤞
 
