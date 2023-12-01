@@ -453,7 +453,7 @@ curl -v -X POST http://localhost:8080/text \
  -d "Toto, I have a feeling we are not in Kansas anymore"
 ```
 
-Use [kcat](https://github.com/edenhill/kcat) (formerly know as **kafkacat**) to produce/consume to/from Kafka:
+Use [kcat](https://github.com/edenhill/kcat) to produce/consume to/from Kafka:
 ```shell
 # consume
 kcat -b localhost:9094 -C -t pub.texts -f '%k %s\n'
