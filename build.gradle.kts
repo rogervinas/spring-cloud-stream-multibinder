@@ -17,7 +17,7 @@ repositories {
   mavenCentral()
 }
 
-val springCloudVersion = "2022.0.4"
+val springCloudVersion = "2023.0.0"
 val testContainersVersion = "1.19.3"
 
 dependencies {
