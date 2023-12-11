@@ -1,8 +1,8 @@
 [![CI](https://github.com/rogervinas/spring-cloud-stream-multibinder/actions/workflows/gradle.yml/badge.svg)](https://github.com/rogervinas/spring-cloud-stream-multibinder/actions/workflows/gradle.yml)
 ![Java](https://img.shields.io/badge/Java-21-blue?labelColor=black)
 ![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue?labelColor=black)
-![SpringBoot](https://img.shields.io/badge/SpringBoot-3.1.6-blue?labelColor=black)
-![SpringCloud](https://img.shields.io/badge/SpringCloud-2022.0.4-blue?labelColor=black)
+![SpringBoot](https://img.shields.io/badge/SpringBoot-3.2.0-blue?labelColor=black)
+![SpringCloud](https://img.shields.io/badge/SpringCloud-2023.0.0-blue?labelColor=black)
 
 # Spring Cloud Stream Multibinder
 
