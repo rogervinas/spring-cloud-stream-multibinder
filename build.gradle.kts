@@ -4,9 +4,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("org.springframework.boot") version "3.2.5"
-  id("io.spring.dependency-management") version "1.1.4"
-  kotlin("jvm") version "1.9.23"
-  kotlin("plugin.spring") version "1.9.23"
+  id("io.spring.dependency-management") version "1.1.5"
+  kotlin("jvm") version "2.0.0"
+  kotlin("plugin.spring") version "2.0.0"
 }
 
 group = "com.rogervinas"
@@ -18,7 +18,7 @@ repositories {
 }
 
 val springCloudVersion = "2023.0.1"
-val testContainersVersion = "1.19.7"
+val testContainersVersion = "1.19.8"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
