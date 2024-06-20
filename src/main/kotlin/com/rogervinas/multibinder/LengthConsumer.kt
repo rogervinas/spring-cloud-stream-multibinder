@@ -9,7 +9,6 @@ interface LengthProcessor {
 }
 
 class LengthConsoleProcessor : LengthProcessor {
-
   private val logger = LoggerFactory.getLogger(LengthConsoleProcessor::class.java)
 
   override fun process(event: LengthEvent) {
@@ -18,7 +17,6 @@ class LengthConsoleProcessor : LengthProcessor {
 }
 
 class LengthStreamConsumer(private val processor: LengthProcessor) : (LengthEvent) -> Unit {
-
   override fun invoke(event: LengthEvent) {
     processor.process(event)
   }

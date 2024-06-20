@@ -11,7 +11,6 @@ interface TextProducer {
 }
 
 class TextFluxProducer : () -> Flux<TextEvent>, TextProducer {
-
   private val sink = Sinks.many().unicast().onBackpressureBuffer<TextEvent>()
 
   override fun produce(event: TextEvent) {

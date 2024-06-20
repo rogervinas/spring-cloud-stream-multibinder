@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class TextController(private val textProducer: TextProducer) {
-
   @PostMapping("/text", consumes = [TEXT_PLAIN_VALUE])
-  fun text(@RequestBody text: String) {
+  fun text(
+    @RequestBody text: String,
+  ) {
     textProducer.produce(TextEvent(text))
   }
 }

@@ -8,7 +8,6 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
 internal class LengthConsoleProcessorTest {
-
   @Test
   fun `should log consumed length event to console`(capturedOutput: CapturedOutput) {
     val lengthConsoleProcessor = LengthConsoleProcessor()
