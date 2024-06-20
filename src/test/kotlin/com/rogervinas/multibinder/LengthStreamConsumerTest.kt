@@ -5,7 +5,6 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 internal class LengthStreamConsumerTest {
-
   @Test
   fun `should consume length events`() {
     val lengthProcessor = mock(LengthProcessor::class.java)

@@ -9,7 +9,6 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @WebFluxTest(controllers = [TextController::class])
 class TextControllerTest {
-
   @Autowired
   lateinit var webClient: WebTestClient
 

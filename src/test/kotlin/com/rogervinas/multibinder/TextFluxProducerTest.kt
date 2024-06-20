@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class TextFluxProducerTest {
-
   @Test
   fun `should produce text events`() {
     val producer = TextFluxProducer()
@@ -19,7 +18,7 @@ internal class TextFluxProducerTest {
     assertThat(events).containsExactly(
       TextEvent("Well"),
       TextEvent("nobody is"),
-      TextEvent("perfect!")
+      TextEvent("perfect!"),
     )
   }
 }

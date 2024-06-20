@@ -23,7 +23,6 @@ private const val KEY2 = "key2"
 private const val KEY3 = "key3"
 
 internal class TextLengthProcessorTest {
-
   private lateinit var topologyTestDriver: TopologyTestDriver
   private lateinit var topicIn: TestInputTopic<String, TextEvent>
   private lateinit var topicOut: TestOutputTopic<String, LengthEvent>
@@ -31,23 +30,26 @@ internal class TextLengthProcessorTest {
   @BeforeEach
   fun beforeEach() {
     val stringSerde = Serdes.StringSerde()
+    val textEventSerializer = JsonSerde(TextEvent::class.java).serializer()
+    val lengthEventDeserializer = JsonSerde(LengthEvent::class.java).deserializer()
     val streamsBuilder = StreamsBuilder()
 
     TextLengthProcessor()
       .apply(streamsBuilder.stream(TOPIC_IN))
       .to(TOPIC_OUT)
 
-    val config = Properties().apply {
-      setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
-      setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
-      setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
-      setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
-      setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
-    }
+    val config =
+      Properties().apply {
+        setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
+        setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
+        setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
+        setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
+        setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
+      }
     val topology = streamsBuilder.build()
     topologyTestDriver = TopologyTestDriver(topology, config)
-    topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), JsonSerde(TextEvent::class.java).serializer())
-    topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), JsonSerde(LengthEvent::class.java).deserializer())
+    topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), textEventSerializer)
+    topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), lengthEventDeserializer)
   }
 
   @AfterEach
@@ -64,7 +66,7 @@ internal class TextLengthProcessorTest {
     assertThat(topicOut.readKeyValuesToList()).containsExactly(
       KeyValue(KEY1, LengthEvent(6)),
       KeyValue(KEY2, LengthEvent(12)),
-      KeyValue(KEY3, LengthEvent(4))
+      KeyValue(KEY3, LengthEvent(4)),
     )
   }
 }

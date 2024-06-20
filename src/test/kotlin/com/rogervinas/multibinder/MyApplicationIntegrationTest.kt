@@ -20,9 +20,7 @@ import org.testcontainers.shaded.org.awaitility.Durations.ONE_MINUTE
 @Testcontainers
 @ExtendWith(OutputCaptureExtension::class)
 internal class MyApplicationIntegrationTest {
-
   companion object {
-
     @Container
     val container = DockerComposeContainerHelper().createContainer()
   }
