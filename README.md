@@ -178,7 +178,7 @@ class TextControllerTest {
   @Autowired
   lateinit var webClient: WebTestClient
 
-  @MockBean
+  @MockitoBean
   lateinit var textProducer: TextProducer
 
   @Test
