@@ -130,12 +130,12 @@ kafka:
   topic:
     texts: "pub.texts"
     lengths: "pub.lengths"
-  brokers: "localhost:9094"
+  brokers: "localhost:9092"
 ```
 
 * **Spring Cloud Stream** will create:
-  * A **Kafka Streams binder** connected to **localhost:9094**
-  * A **Kafka binder** connected to **localhost:9094**
+  * A **Kafka Streams binder** connected to **localhost:9092**
+  * A **Kafka binder** connected to **localhost:9092**
 * Following the **Spring Cloud Stream functional programming model conventions** we should create:
   * A bean named **textProducer** that should implement:
     * In **Java**: `Supplier<Flux<TextEvent>>` interface
@@ -178,7 +178,7 @@ class TextControllerTest {
   @Autowired
   lateinit var webClient: WebTestClient
 
-  @MockBean
+  @MockitoBean
   lateinit var textProducer: TextProducer
 
   @Test
@@ -456,10 +456,10 @@ curl -v -X POST http://localhost:8080/text \
 Use [kcat](https://github.com/edenhill/kcat) to produce/consume to/from Kafka:
 ```shell
 # consume
-kcat -b localhost:9094 -C -t pub.texts -f '%k %s\n'
-kcat -b localhost:9094 -C -t pub.lengths -f '%k %s\n'
+kcat -b localhost:9092 -C -t pub.texts -f '%k %s\n'
+kcat -b localhost:9092 -C -t pub.lengths -f '%k %s\n'
 
 # produce
 echo 'key1:{"text":"I feel the need - the need for speed!"}' \
- | kcat -b localhost:9094 -P -t pub.texts -K:
+ | kcat -b localhost:9092 -P -t pub.texts -K:
 ```
