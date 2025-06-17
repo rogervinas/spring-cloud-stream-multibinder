@@ -1,4 +1,4 @@
-package com.rogervinas.stream.helper
+package com.rogervinas.multibinder.helper
 
 import org.testcontainers.containers.ComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait.forListeningPort
