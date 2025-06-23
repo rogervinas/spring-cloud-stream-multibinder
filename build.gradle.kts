@@ -4,10 +4,10 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
 
 plugins {
-  id("org.springframework.boot") version "3.5.0"
+  id("org.springframework.boot") version "3.5.3"
   id("io.spring.dependency-management") version "1.1.7"
-  kotlin("jvm") version "2.1.21"
-  kotlin("plugin.spring") version "2.1.21"
+  kotlin("jvm") version "2.2.0"
+  kotlin("plugin.spring") version "2.2.0"
 }
 
 group = "com.rogervinas"
@@ -19,7 +19,7 @@ repositories {
 }
 
 val springCloudVersion = "2025.0.0"
-val testContainersVersion = "1.21.1"
+val testContainersVersion = "1.21.2"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
