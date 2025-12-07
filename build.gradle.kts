@@ -33,6 +33,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.springframework.boot:spring-boot-webflux-test")
   testImplementation("org.apache.kafka:kafka-streams-test-utils")
   testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
   testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")

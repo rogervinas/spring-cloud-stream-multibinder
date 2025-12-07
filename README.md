@@ -1,8 +1,7 @@
 [![CI](https://github.com/rogervinas/spring-cloud-stream-multibinder/actions/workflows/ci.yml/badge.svg)](https://github.com/rogervinas/spring-cloud-stream-multibinder/actions/workflows/ci.yml)
 ![Java](https://img.shields.io/badge/Java-21-blue?labelColor=black)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.x-blue?labelColor=black)
-![SpringBoot](https://img.shields.io/badge/SpringBoot-3.x-blue?labelColor=black)
-![SpringCloud](https://img.shields.io/badge/SpringCloud-2024.x-blue?labelColor=black)
+![SpringBoot](https://img.shields.io/badge/SpringBoot-4.x-blue?labelColor=black)
 
 # Spring Cloud Stream Multibinder
 
@@ -288,15 +287,15 @@ internal class TextLengthProcessorTest {
 
     val config = Properties().apply {
       setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
-      setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
+      setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JacksonJsonSerde::class.java.name)
       setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
       setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
-      setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
+      setProperty(JacksonJsonDeserializer.TRUSTED_PACKAGES, "*")
     }
     val topology = streamsBuilder.build()
     topologyTestDriver = TopologyTestDriver(topology, config)
-    topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), JsonSerde(TextEvent::class.java).serializer())
-    topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), JsonSerde(LengthEvent::class.java).deserializer())
+    topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), JacksonJsonSerde(TextEvent::class.java).serializer())
+    topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), JacksonJsonSerde(LengthEvent::class.java).deserializer())
   }
 
   @AfterEach

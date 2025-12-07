@@ -11,8 +11,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.kafka.support.serializer.JsonDeserializer
-import org.springframework.kafka.support.serializer.JsonSerde
+import org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+import org.springframework.kafka.support.serializer.JacksonJsonSerde
 import java.util.Properties
 
 private const val TOPIC_IN = "topic.in"
@@ -30,8 +30,8 @@ internal class TextLengthProcessorTest {
   @BeforeEach
   fun beforeEach() {
     val stringSerde = Serdes.StringSerde()
-    val textEventSerializer = JsonSerde(TextEvent::class.java).serializer()
-    val lengthEventDeserializer = JsonSerde(LengthEvent::class.java).deserializer()
+    val textEventSerializer = JacksonJsonSerde(TextEvent::class.java).serializer()
+    val lengthEventDeserializer = JacksonJsonSerde(LengthEvent::class.java).deserializer()
     val streamsBuilder = StreamsBuilder()
 
     TextLengthProcessor()
@@ -41,10 +41,10 @@ internal class TextLengthProcessorTest {
     val config =
       Properties().apply {
         setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
-        setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
+        setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JacksonJsonSerde::class.java.name)
         setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
         setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
-        setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
+        setProperty(JacksonJsonDeserializer.TRUSTED_PACKAGES, "*")
       }
     val topology = streamsBuilder.build()
     topologyTestDriver = TopologyTestDriver(topology, config)
