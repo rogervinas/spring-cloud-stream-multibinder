@@ -21,13 +21,16 @@ val springCloudVersion = "2025.1.0"
 val testContainersVersion = "1.21.3"
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.cloud:spring-cloud-stream")
   implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka")
   implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka-streams")
+
   implementation("org.springframework.boot:spring-boot-starter-jackson")
+  implementation("tools.jackson.module:jackson-module-kotlin")
+
+  implementation("org.jetbrains.kotlin:kotlin-reflect")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.apache.kafka:kafka-streams-test-utils")
